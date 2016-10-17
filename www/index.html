@@ -1,0 +1,29 @@
+<html>
+<head>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/smart.min.js"></script>
+<script type="text/javascript" src="js/skelement.js"></script>
+<script type="text/javascript" src="src/load.js"></script>
+<script id="tpl-user-list" type="text/x-tpl-smarty">
+	<div style="border: 1px solid red;">
+		{if $users}
+			{foreach from=$users item=user}
+				<sk-user-card name="{$user}"></sk-user-card>
+			{/foreach}
+		{else}
+			VIDE
+		{/if}
+	</div>
+	<button onclick="{$skThis}.render({literal}{users: ['aa', 'bb']}{/literal})">Ajouter</button>
+	<button onclick="alert({$skThis}.id)">Hello</button>
+	<button onclick="{$skThis}.reset()">Cacher</button>
+</script>
+
+</head>
+<body>
+
+<sk-user-list id="mainlist" userlist="first"></sk-user-list>
+
+</body>
+</html>
