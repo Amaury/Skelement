@@ -1,7 +1,7 @@
 {
 	"users": [
-		"Jo",
-		"Zette",
-		"Joko"
+		{"name": "Arnold Schwarzenegger", "age": 69},
+		{"name": "Bruce Willis", "age": 61},
+		{"name": "Sylvester Stallone", "age": 70}
 	]
 }
