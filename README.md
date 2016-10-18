@@ -27,6 +27,7 @@ Here is the source tree of the example application:
 ├── README.md                   This documentation
 └── www
     ├── app                     Application's folder
+    │   ├── title.js            app.title object
     │   ├── user                app.user namespace's folder
     │   │   ├── card.js         app.user.card object
     │   │   ├── card.tpl        app.user.card's template
@@ -36,15 +37,56 @@ Here is the source tree of the example application:
     ├── app.js                  Application loader
     ├── index.html              Bootstrap HTML file
     ├── js                      Javascript Libraries
-    │   ├── jquery.min.js
-    │   ├── skelement.js
-    │   └── smart.min.js
+    │   ├── jquery.min.js       jQuery
+    │   ├── skelement.js        Skelement
+    │   └── smart.min.js        jSmart
     └── users.json              Example of external loadable JSON file.
 
 ```
 
-How to write an object
-----------------------
+
+How to write a basic object
+---------------------------
+
+The simplest object contains its own template, and just one method which is called when the component is created:
+
+```javascript
+var Title = {
+	// HTML tag of this component (without the "sk-" prefix)
+	tag: "title",
+	// template associated to the component
+	template: "{if $level == 1}<h1>{else}<h2>{/if}{$value|escape}{if $level == 1}</h1>{else}</h2>{/if}"
+};
+Title.prototype = {
+	created: function(params, response) {
+		response({
+			level: (params.level != undefined) ? params.level : 1,
+			value: (params.value != undefined && params.value.length) ? params.value : "Default Title"
+		});
+	}
+};
+// create the webcomponent for the tag "sk-title"
+sk.createComponent(Title);
+```
+
+And use this HTML file:
+````html
+<html>
+<head>
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/smart.min.js"></script>
+	<script type="text/javascript" src="/js/skelement.js"></script>
+	<script type="text/javascript" src="/title.js"></script>
+</head>
+<body>
+	<sk-title level="1" value="Page Title"></sk-title>
+</body>
+</html>
+````
+
+
+How to write a more complex object
+----------------------------------
 
 ```javascript
 var App = {
@@ -53,7 +95,8 @@ var App = {
 	// associated template
 	// - if not set, will used a template defined inside the HTML file, with an attribute id="tpl-app"
 	// - it could be a string that contains the template itself
-	// - it could be an object with the key "id" (for a template in HTML) or the key "url" (to fetch the template from an external file)
+	// - it could be an object with the key "id" (for a template in HTML) or the key "url"
+	//   (to fetch the template from an external file)
 	template: {url: "/app.tpl"}
 };
 App.prototype = {
@@ -85,6 +128,7 @@ App.prototype = {
 		$(this).attr("listType", newType);
 	}
 };
+sk.createComponent(App);
 ```
 
 How to write a template
