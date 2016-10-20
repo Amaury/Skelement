@@ -7,6 +7,9 @@
 	<script type="text/javascript" src="/js/smart.min.js"></script>
 	<!-- Skelement (JS Application Framework) -->
 	<script type="text/javascript" src="/js/skelement.js"></script>
+	<script type="text/javascript" src="/js/skelement._core.js"></script>
+	<script type="text/javascript" src="/js/skelement._core.network.js"></script>
+	<script type="text/javascript" src="/js/skelement._core.ui.js"></script>
 	<!-- Application -->
 	<!--script type="text/javascript" src="/app.js"></script-->
 
@@ -20,6 +23,6 @@
 </head>
 <body sk-app-loader="/loader.js">
 	<sk-title></sk-title>
-	<sk-user-list id="mainlist" userlist="fake"></sk-user-list>
+	<sk-user-list id="mainlist" userlist="fake" sk-network-connected></sk-user-list>
 </body>
 </html>
