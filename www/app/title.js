@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Webcomponent that show the title of the page.
  */

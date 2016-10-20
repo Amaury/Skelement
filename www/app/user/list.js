@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Webcomponent that shows a list of users.
  */
