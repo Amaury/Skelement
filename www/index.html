@@ -6,23 +6,21 @@
 	<!-- jSmart (Smarty template engine) -->
 	<script type="text/javascript" src="/js/smart.min.js"></script>
 	<!-- Skelement (JS Application Framework) -->
-	<script type="text/javascript" src="/js/skelement.js"></script>
-	<script type="text/javascript" src="/js/skelement._core.js"></script>
-	<script type="text/javascript" src="/js/skelement._core.network.js"></script>
-	<script type="text/javascript" src="/js/skelement._core.ui.js"></script>
-	<!-- Application -->
-	<!--script type="text/javascript" src="/app.js"></script-->
+	<script type="text/javascript" src="/js/skelement/sk.js"></script>
+	<script type="text/javascript" src="/js/skelement/sk._core.js"></script>
+	<script type="text/javascript" src="/js/skelement/sk._core.network.js"></script>
+	<script type="text/javascript" src="/js/skelement/sk._core.ui.js"></script>
 
 	<!-- CSS STYLE -->
 	<link rel="stylesheet" type="text/css" href="/style.css" />
 
 	<!-- INLINE TEMPLATE -->
-	<script id="tpl-title" type="text/x-tpl-smarty">
-		<h1>{$value|escape}</h1>
+	<script id="tpl-application" type="text/x-tpl-smarty">
+		<sk-title></sk-title>
+		<sk-user-list id="mainlist" userlist="fake" sk-network-connected></sk-user-list>
 	</script>
 </head>
 <body sk-app-loader="/loader.js">
-	<sk-title></sk-title>
-	<sk-user-list id="mainlist" userlist="fake" sk-network-connected></sk-user-list>
+	<sk-application></sk-application>
 </body>
 </html>

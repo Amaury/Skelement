@@ -23,25 +23,78 @@ Here is the source tree of the example application:
 
 ```
 .
-├── Makefile                    Commands execution tool
-├── README.md                   This documentation
+├── bin                                 Command-line tools directory
+│   └── generateApp.php                 App packaging tool
+├── Makefile                            Commands execution tool
+├── README.md                           This documentation
 └── www
-    ├── app                     Application's folder
-    │   ├── title.js            app.title object
-    │   ├── user                app.user namespace's folder
-    │   │   ├── card.js         app.user.card object
-    │   │   ├── card.tpl        app.user.card's template
-    │   │   ├── list.js         app.user.list object
-    │   │   └── list.tpl        app.user.list's template
-    │   └── user.js             app.user object
-    ├── app.js                  Application loader
-    ├── index.html              Bootstrap HTML file
-    ├── js                      Javascript Libraries
-    │   ├── jquery.min.js       jQuery
-    │   ├── skelement.js        Skelement
-    │   └── smart.min.js        jSmart
-    └── users.json              Example of external loadable JSON file.
+    ├── app                             Application's folder
+    │   ├── title.js                    app.title object
+    │   ├── user                        app.user namespace's folder
+    │   │   ├── card.js                 app.user.card object
+    │   │   ├── card.tpl                app.user.card's template
+    │   │   ├── list.js                 app.user.list object
+    │   │   └── list.tpl                app.user.list's template
+    │   └── user.js                     app.user object
+    ├── app.js                          Application root namespace
+    ├── index.html                      Bootstrap HTML file
+    ├── js                              Javascript Libraries
+    │   ├── jquery.min.js               jQuery
+    │   ├── skelement                   Skelement source directory
+    │   │   ├── sk._core.js             Core object
+    │   │   ├── sk._core.network.js     Network management object
+    │   │   ├── sk._core.ui.js          Tempaltes management object
+    │   │   └── sk.js                   Public interface
+    │   └── smart.min.js                jSmart
+    ├── loader.js                       Application loader
+    ├── style.css                       CSS styles
+    └── users.json                      Example of external loadable JSON file.
+```
 
+
+Bootstrapping the framework
+---------------------------
+
+```html
+<html>
+<head>
+	<!-- *** JAVASCRIPT LIBRARIES *** -->
+	<!-- jQuery -->
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<!-- jSmart (Smarty template engine) -->
+	<script type="text/javascript" src="/js/smart.min.js"></script>
+	<!-- Skelement (JS Application Framework) -->
+	<script type="text/javascript" src="/js/skelement/sk.js"></script>
+	<script type="text/javascript" src="/js/skelement/sk._core.js"></script>
+	<script type="text/javascript" src="/js/skelement/sk._core.network.js"></script>
+	<script type="text/javascript" src="/js/skelement/sk._core.ui.js"></script>
+
+	<!-- CSS STYLE -->
+	<link rel="stylesheet" type="text/css" href="/style.css" />
+</head>
+<body sk-app-loader="/loader.js">
+	<sk-application></sk-application>
+</body>
+</html>
+```
+
+- The `sk-app-loader` attribute of the `<body>` element contains the URL to the application loader.
+- Here the whole application is defined by the `<sk-application>` element.
+
+
+The application loader
+----------------------
+
+This file contains just a list of instructions that will be used to load the Javascript files of the application.
+
+```javascript
+sk.load("/app.js");
+sk.load("/app/application.js");
+sk.load("/app/title.js");
+sk.load("/app/connection.js");
+sk.load("/app/user.js");
+sk.load("/app/user/list.js");
+sk.load("/app/user/card.js");
 ```
 
 

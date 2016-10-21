@@ -62,15 +62,19 @@ sk._core = new function() {
 						}
 						attrs[attr.name] = attr.value;
 					});
-					// call the creation callback, giving 2 parameters: the HTML node attributes,
-					// and a callback function that should be called as a result
-					var node = this;
-					classObj.prototype.created(attrs, function(response) {
-						node.render(response);
-					});
-					return;
+					// check if the creation callback exists
+					if (classObj.prototype != undefined && classObj.prototype.created != undefined) {
+						// call the creation callback, giving 2 parameters: the HTML node attributes,
+						// and a callback function that should be called as a result
+						var node = this;
+						classObj.prototype.created(attrs, function(response) {
+							node.render(response);
+						});
+						return;
+					}
+					data = {};
 				}
-				// data are completed with the node identifier
+				// data are enriched with the node identifier
 				var id = $(this).attr("id");
 				data.id = id;
 				data.skThis = "$('#" + id + "')[0]";
