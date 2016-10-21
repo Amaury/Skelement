@@ -25,7 +25,8 @@ app.user.List.prototype = {
 					{name: "Lisa", age: 8},
 					{name: "Maggie", age: 1}
 				],
-				userlist: params.userlist
+				userlist: params.userlist,
+				networkConnected: params["sk-network-connected"]
 			};
 			response(data);
 			return;
@@ -33,6 +34,7 @@ app.user.List.prototype = {
 		// if it's any other list, we send a request to the server (here a static JSON file is fetched)
 		$.getJSON("/users.json", function(data) {
 			data.userlist = params.userlist;
+			data.networkConnected = params["sk-network-connected"];
 			response(data);
 		});
 	},

@@ -48,18 +48,22 @@ sk._core = new function() {
 			proto.render = function(data) {
 				// check if some data are provided
 				if (data == undefined) {
-					// get the attributes of the HTML node
+					// get the attributes of the HTML node and create an associative array that will
+					// be given as parameter for the creation callback
 					var attrs = {};
 					$.each(this.attributes, function(index, attr) {
 						if (attr.name.substring(0, 3) == "sk-") {
+							// process special attributes
 							if (attr.name == "sk-network-connected") {
-								sk._core.network.changeConnection(this);
+								// update the network connection status
+								attr.value = sk._core.network.isConnected(true);
+								$(this).attr("sk-network-connected", attr.value);
 							}
-						} else {
-							attrs[attr.name] = attr.value;
 						}
+						attrs[attr.name] = attr.value;
 					});
-					// call the creation callback, giving 2 parameters: the HTML node attributes, and a callback function that should be called as a result
+					// call the creation callback, giving 2 parameters: the HTML node attributes,
+					// and a callback function that should be called as a result
 					var node = this;
 					classObj.prototype.created(attrs, function(response) {
 						node.render(response);

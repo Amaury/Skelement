@@ -9,3 +9,14 @@
 </div>
 <button onclick="{$skThis}.setUserList('real')" {if $userlist != 'fake'}disabled{/if}>Real users list</button>
 <button onclick="{$skThis}.setUserList('fake')" {if $userlist == 'fake'}disabled{/if}>Fake users list</button>
+
+<div class="network-status">
+	Network status:
+	<span class="network-status-value">
+		{if $networkConnected == "true"}
+			Connected
+		{else}
+			Not connected
+		{/if}
+	</span>
+</div>

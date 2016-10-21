@@ -15,3 +15,15 @@ h1 {
 	margin: 5px;
 	padding: 3px;
 }
+.network-status {
+	margin: 25px;
+	padding: 10px;
+	background-color: #666;
+	color: #fafafa;
+	border-radius: 4px;
+}
+.network-status-value {
+	background-color: #333;
+	padding: 2px;
+	color: #fff;
+}
