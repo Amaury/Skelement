@@ -60,10 +60,13 @@ sk._core = new function() {
 								$(this).attr("sk-network-connected", attr.value);
 							}
 						}
-						attrs[attr.name] = attr.value;
+						attrs[$.camelCase(attr.name)] = attr.value;
 					});
 					// check if the creation callback exists
-					if (classObj.prototype != undefined && classObj.prototype.created != undefined) {
+					if (classObj.prototype == undefined || classObj.prototype.created == undefined) {
+						data = attrs;
+						console.log(data);
+					} else {
 						// call the creation callback, giving 2 parameters: the HTML node attributes,
 						// and a callback function that should be called as a result
 						var node = this;
@@ -72,7 +75,6 @@ sk._core = new function() {
 						});
 						return;
 					}
-					data = {};
 				}
 				// data are enriched with the node identifier
 				var id = $(this).attr("id");

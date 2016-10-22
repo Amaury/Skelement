@@ -17,6 +17,18 @@ var sk = new function() {
 		$.getScript(url);
 	};
 	/**
+	 * Load a list of external JS files from a text file.
+	 * @param	string	url	URL of the text file.
+	 */
+	this.loadList = function(url) {
+		$.get(url, function(txt) {
+			var lines = txt.split("\n");
+			for (var i = 0, len = lines.length; i < len; i++) {
+				sk.load($.trim(lines[i]));
+			}
+		}, "text");
+	};
+	/**
 	 * Create webcomponents from a list of objects.
 	 * @param	array|string	component	Component object, or list of component objects.
 	 */
@@ -34,6 +46,6 @@ var sk = new function() {
 	window.addEventListener("DOMContentLoaded", function() {
 		/* Loading of application files. */
 		var appLoader = $("body").attr("sk-app-loader");
-		sk.load(appLoader);
+		sk.loadList(appLoader);
 	}, false);
 };
