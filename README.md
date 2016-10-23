@@ -46,7 +46,7 @@ Here is the source tree of the example application:
     │   │   ├── sk._core.ui.js          Tempaltes management object
     │   │   └── sk.js                   Public interface
     │   └── smart.min.js                jSmart
-    ├── loader.js                       Application loader
+    ├── loader.txt                      Application loader
     ├── style.css                       CSS styles
     └── users.json                      Example of external loadable JSON file.
 ```
@@ -87,14 +87,14 @@ The application loader
 
 This file contains just a list of instructions that will be used to load the Javascript files of the application.
 
-```javascript
-sk.load("/app.js");
-sk.load("/app/application.js");
-sk.load("/app/title.js");
-sk.load("/app/connection.js");
-sk.load("/app/user.js");
-sk.load("/app/user/list.js");
-sk.load("/app/user/card.js");
+```
+/app.js
+/app/application.js
+/app/title.js
+/app/connection.js
+/app/user.js
+/app/user/list.js
+/app/user/card.js
 ```
 
 
