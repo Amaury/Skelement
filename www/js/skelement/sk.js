@@ -45,6 +45,11 @@ var sk = new function() {
 	/* *** Init. *** */
 	window.addEventListener("DOMContentLoaded", function() {
 		/* Loading of application files. */
+		var appFile = $("body").attr("sk-app-file");
+		if (appFile != undefined && appFile.length) {
+			sk.load(appFile);
+			return;
+		}
 		var appLoader = $("body").attr("sk-app-loader");
 		sk.loadList(appLoader);
 	}, false);

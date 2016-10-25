@@ -16,9 +16,16 @@ foreach ($params as $param) {
 /** Concatenate and minify application's files. */
 function processApplication() {
 	$prefix = __DIR__ . '/../www';
+	// read HTML file
 	$htmlPath = "$prefix/index.html";
 	$html = file_get_contents($htmlPath);
+	// extract application loader
 	preg_match('/sk-app-loader="([^"]*)"/', $html, $matches);
+	if (!isset($matches[1]) || empty($matches[1])) {
+		// no application loader
+		return;
+	}
+	// read loader file
 	$loaderPath = "$prefix/" . $matches[1];
 	if (!file_exists($loaderPath)) {
 		// loader file doesn't exist
@@ -27,6 +34,7 @@ function processApplication() {
 	$loader = file_get_contents($loaderPath);
 	$list = explode("\n", $loader);
 	$result= '';
+	// process files
 	foreach ($list as $path) {
 		if (empty($path))
 			continue;
@@ -39,28 +47,37 @@ function processApplication() {
 		$content = trim(JSMin::minify(trim($content)));
 		$result .= "/* $path */\n$content\n";
 	}
-	file_put_contents("$prefix/_app.js", $result);
-	$html = str_replace('sk-app-loader="' . $matches[1] . '"', 'sk-app-loader="_app.js"', $html);
-	file_put_contents($htmlPath, $html);
+	// write application file
+	if (file_put_contents("$prefix/_app.js", $result) === false) {
+		// unable to write application file
+		exit(4);
+	}
+	// update HTML file
+	$html = str_replace('sk-app-loader="' . $matches[1] . '"', 'sk-app-file="_app.js"', $html);
+	if (file_put_contents($htmlPath, $html) === false) {
+		// unable to update HTML file
+		exit(5);
+	}
 }
 
 /** Concatenate and minify framework's files. */
 function processFramework() {
+	$prefix = __DIR__ . '/../www/js';
 	$files = array(
-		__DIR__ . '/../www/js/polyfill-custom-element.js',
-		__DIR__ . '/../www/js/jquery.min.js',
-		__DIR__ . '/../www/js/smart.min.js',
-		__DIR__ . '/../www/js/skelement/sk.js',
-		__DIR__ . '/../www/js/skelement/sk._core.js',
-		__DIR__ . '/../www/js/skelement/sk._core.network.js',
-		__DIR__ . '/../www/js/skelement/sk._core.ui.js'
+		'polyfill-custom-element.js',
+		'jquery.min.js',
+		'smart.min.js',
+		'skelement/sk.js',
+		'skelement/sk._core.js',
+		'skelement/sk._core.network.js',
+		'skelement/sk._core.ui.js'
 	);
-	if (($output = fopen(__DIR__ . '/../www/js/skelement-loader.js', 'w')) === false) {
+	if (($output = fopen("$prefix/skelement-loader.js", 'w')) === false) {
 		// unable to open file
 		exit(1);
 	}
 	foreach ($files as $file) {
-		$content = file_get_contents($file);
+		$content = file_get_contents("$prefix/$file");
 		if (substr($file, -strlen('.min.js')) != '.min.js') {
 			$content = JSMin::minify($content);
 		}
