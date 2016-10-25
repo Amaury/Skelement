@@ -33,7 +33,7 @@ function processApplication() {
 	}
 	$loader = file_get_contents($loaderPath);
 	$list = explode("\n", $loader);
-	$result= '';
+	$result= "\"use strict\";\n";
 	// process files
 	foreach ($list as $path) {
 		if (empty($path))
@@ -72,18 +72,24 @@ function processFramework() {
 		'skelement/sk._core.network.js',
 		'skelement/sk._core.ui.js'
 	);
-	if (($output = fopen("$prefix/skelement-loader.js", 'w')) === false) {
-		// unable to open file
-		exit(1);
-	}
+	$result = "\"use strict\";\n";
 	foreach ($files as $file) {
-		$content = file_get_contents("$prefix/$file");
+		if (empty($file))
+			continue;
+		if (($content = file_get_contents("$prefix/$file")) === false) {
+			// unable to read file
+			exit(6);
+		}
+		$content = str_replace('"use strict";', '', $content);
 		if (substr($file, -strlen('.min.js')) != '.min.js') {
 			$content = JSMin::minify($content);
 		}
-		fwrite($output, $content);
+		$result .= "/* $file */\n$content\n";
 	}
-	fclose($output);
+	if (file_put_contents("$prefix/skelement-loader.js", $content) === false) {
+		// unable to update loader file
+		exit(7);
+	}
 }
 
 /**
