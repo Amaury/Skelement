@@ -1,7 +1,7 @@
-/app.js
-/app/application.js
-/app/title.js
-/app/netstatus.js
-/app/user.js
-/app/user/list.js
-/app/user/card.js
+/app/app.js
+/app/application/application.js
+/app/title/title.js
+/app/netstatus/netstatus.js
+/app/user/user.js
+/app/user/list/list.js
+/app/user/card/card.js
