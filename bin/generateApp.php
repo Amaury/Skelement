@@ -72,7 +72,7 @@ function processFramework() {
 		'skelement/sk._core.network.js',
 		'skelement/sk._core.ui.js'
 	);
-	$result = "\"use strict\";\n";
+	$result = '';
 	foreach ($files as $file) {
 		if (empty($file))
 			continue;
@@ -86,7 +86,7 @@ function processFramework() {
 		}
 		$result .= "/* $file */\n$content\n";
 	}
-	if (file_put_contents("$prefix/skelement-loader.js", $content) === false) {
+	if (file_put_contents("$prefix/skelement-loader.js", $result) === false) {
 		// unable to update loader file
 		exit(7);
 	}
