@@ -65,7 +65,6 @@ sk._core = new function() {
 					// check if the creation callback exists
 					if (classObj.prototype == undefined || classObj.prototype.created == undefined) {
 						data = attrs;
-						console.log(data);
 					} else {
 						// call the creation callback, giving 2 parameters: the HTML node attributes,
 						// and a callback function that should be called as a result
