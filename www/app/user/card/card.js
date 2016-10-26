@@ -6,9 +6,7 @@ app.user.Card = {
 	/** HTML tag of this component. */
 	tag: "user-card",
 	/** The associated template. */
-	template: "<div class='user'><strong>{$name|escape}</strong> ({$age})</div>"
-	// could also be an external template
-	//template: {url: "/tpl/app.user.card.tpl"}
+	templateUrl: "/app/user/card/card.tpl"
 };
 app.user.Card.prototype = {
 	/**

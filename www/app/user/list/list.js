@@ -6,7 +6,7 @@ app.user.List = {
 	/** HTML tag of this component. */
 	tag: "user-list",
 	/** URL of the template. */
-	template: {url: "/app/user/list/list.tpl"}
+	templateUrl: "/app/user/list/list.tpl"
 };
 app.user.List.prototype = {
 	/**

@@ -24,6 +24,16 @@ sk._core = new function() {
 		var component = (function() {
 			// creation of the component's prototype
 			var proto = Object.create(HTMLElement.prototype);
+			// management of the component's template
+			if (classObj.templateId != undefined) {
+				classObj.template = {id: classObj.templateId};
+				classObj.templateId = undefined;
+			} else if (classObj.templateUrl != undefined) {
+				classObj.template = {url: classObj.templateUrl};
+				classObj.templateUrl = undefined;
+			} else {
+				classObj.template = {id: tag};
+			}
 			// definition of basic properties
 			proto.tag = tag;
 			proto.manager = classObj;
