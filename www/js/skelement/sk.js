@@ -25,7 +25,7 @@ var sk = new function() {
 			var lines = txt.split("\n");
 			for (var i = 0, len = lines.length; i < len; i++) {
 				var url = $.trim(lines[i]);
-				if (url.length) {
+				if (url.length && url.charAt(0) != "#") {
 					sk.load(url);
 				}
 			}
