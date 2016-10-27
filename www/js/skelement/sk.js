@@ -24,7 +24,10 @@ var sk = new function() {
 		$.get(url, function(txt) {
 			var lines = txt.split("\n");
 			for (var i = 0, len = lines.length; i < len; i++) {
-				sk.load($.trim(lines[i]));
+				var url = $.trim(lines[i]);
+				if (url.length) {
+					sk.load(url);
+				}
 			}
 		}, "text");
 	};
