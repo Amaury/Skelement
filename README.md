@@ -23,32 +23,16 @@ Here is the source tree of the example application:
 
 ```
 .
-├── bin                                 Command-line tools directory
-│   └── generateApp.php                 App packaging tool
+├── bin/                                Command-line tools directory
 ├── Makefile                            Commands execution tool
 ├── README.md                           This documentation
-└── www
-    ├── app                             Application's folder
-    │   ├── title.js                    app.title object
-    │   ├── user                        app.user namespace's folder
-    │   │   ├── card.js                 app.user.card object
-    │   │   ├── card.tpl                app.user.card's template
-    │   │   ├── list.js                 app.user.list object
-    │   │   └── list.tpl                app.user.list's template
-    │   └── user.js                     app.user object
-    ├── app.js                          Application root namespace
+└── www/
+    ├── app/                            Application's folder
     ├── index.html                      Bootstrap HTML file
-    ├── js                              Javascript Libraries
-    │   ├── jquery.min.js               jQuery
-    │   ├── skelement                   Skelement source directory
-    │   │   ├── sk._core.js             Core object
-    │   │   ├── sk._core.network.js     Network management object
-    │   │   ├── sk._core.ui.js          Tempaltes management object
-    │   │   └── sk.js                   Public interface
-    │   └── smart.min.js                jSmart
+    ├── js/                             Javascript Libraries
+    ├── l10n/                           Localisation folder
     ├── loader.txt                      Application loader
-    ├── style.css                       CSS styles
-    └── users.json                      Example of external loadable JSON file.
+    └── style.css                       CSS styles
 ```
 
 
@@ -58,27 +42,25 @@ Bootstrapping the framework
 ```html
 <html>
 <head>
-	<!-- *** JAVASCRIPT LIBRARIES *** -->
-	<!-- jQuery -->
-	<script type="text/javascript" src="/js/jquery.min.js"></script>
-	<!-- jSmart (Smarty template engine) -->
-	<script type="text/javascript" src="/js/smart.min.js"></script>
-	<!-- Skelement (JS Application Framework) -->
-	<script type="text/javascript" src="/js/skelement/sk.js"></script>
-	<script type="text/javascript" src="/js/skelement/sk._core.js"></script>
-	<script type="text/javascript" src="/js/skelement/sk._core.network.js"></script>
-	<script type="text/javascript" src="/js/skelement/sk._core.ui.js"></script>
+	<title>Skelement example application</title>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 	<!-- CSS STYLE -->
 	<link rel="stylesheet" type="text/css" href="/style.css" />
+
+	<!-- Basic Javascript libraries (polyfill, jQuery, jSmart) and Skelement framework -->
+	<script type="text/javascript" src="/js/skelement-loader.js"></script>
 </head>
-<body sk-app-loader="/loader.js">
-	<sk-application></sk-application>
+<body sk-app-loader="/loader.js" sk-l10n-fr="/l10n/fr.json" sk-l10n="/l10n/en.json">
+	<sk-title value="Test app"></sk-title>
 </body>
 </html>
 ```
 
-- The `sk-app-loader` attribute of the `<body>` element contains the URL to the application loader.
+- The `sk-app-loader` attribute of the `<body>` element contains the URL to the application loader (see below).
+- Here the `sk-l10n-fr` attribute defines the localisation file for french language.
+- Here the `sk-l10n` attribute defines the localisation file for any other language.
 - Here the whole application is defined by the `<sk-application>` element.
 
 
@@ -88,13 +70,8 @@ The application loader
 This file contains just a list of instructions that will be used to load the Javascript files of the application.
 
 ```
-/app.js
-/app/application.js
+# comment lines start with '#'
 /app/title.js
-/app/connection.js
-/app/user.js
-/app/user/list.js
-/app/user/card.js
 ```
 
 
@@ -108,7 +85,7 @@ var Title = {
 	// HTML tag of this component (without the "sk-" prefix)
 	tag: "title",
 	// template associated to the component
-	template: "{if $level == 1}<h1>{else}<h2>{/if}{$value|escape}{if $level == 1}</h1>{else}</h2>{/if}"
+	template: "<h{$level}>{$value|escape}</h{$level}>"
 };
 Title.prototype = {
 	created: function(params, response) {
@@ -122,20 +99,19 @@ Title.prototype = {
 sk.createComponent(Title);
 ```
 
-And use this HTML file:
-````html
+The result will be:
+```html
 <html>
 <head>
-	<script type="text/javascript" src="/js/jquery.min.js"></script>
-	<script type="text/javascript" src="/js/smart.min.js"></script>
-	<script type="text/javascript" src="/js/skelement.js"></script>
-	<script type="text/javascript" src="/title.js"></script>
+	...
 </head>
-<body>
-	<sk-title level="1" value="Page Title"></sk-title>
+<body sk-app-loader="/loader.js" sk-l10n-fr="/l10n/fr.json" sk-l10n="/l10n/en.json">
+	<sk-title value="Test app">
+		<h1>Test app</h1>
+	</sk-title>
 </body>
 </html>
-````
+```
 
 
 How to write a more complex object
