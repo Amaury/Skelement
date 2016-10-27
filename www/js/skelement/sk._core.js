@@ -1,6 +1,63 @@
 "use strict";
 /** Core namespace. Must not be used from outside of the framework. */
 sk._core = new function() {
+	/** Framework initialisation. */
+	this.init = function() {
+		// check for l10n
+		var lang = window.navigator.userLanguage || window.navigator.language;
+		var l10n = $("body").attr("sk-l10n-" + lang);
+		if (l10n != undefined) {
+			this.loadL10n(l10n, function() {
+				sk._core.loadApplication();
+			});
+			return;
+		}
+		// check for l10n generalisation
+		var index = lang.indexOf("-");
+		if (index != -1) {
+			var lang = lang.substring(0, index);
+			l10n = $("body").attr("sk-l10n-" + lang);
+			if (l10n != undefined) {
+				this.loadL10n(l10n, function() {
+					sk._core.loadApplication();
+				});
+				return;
+			}
+		}
+		// check for global l10n
+		l10n = $("body").attr("sk-l10n");
+		if (l10n != undefined) {
+			this.loadL10n(L10n, function() {
+				sk._core.loadApplication();
+			});
+			return;
+		}
+		// no l10n loading - direct loading of application's files
+		this.loadApplication();
+	};
+	/**
+	 * Load a l10n file.
+	 * @param	string		l10n		Path to the file.
+	 * @param	function	callback	Callback to call after file fetching.
+	 */
+	this.loadL10n = function(l10n, callback) {
+		$.get(l10n, function(data) {
+			sk._core.ui.l10n = data;
+			callback();
+		}, "json");
+	};
+	/** Load application files. */
+	this.loadApplication = function() {
+		// search for "sk-app-file" attribute: One JS file that contains the whole application
+		var appFile = $("body").attr("sk-app-file");
+		if (appFile != undefined && appFile.length) {
+			sk.load(appFile);
+			return;
+		}
+		// search for "sk-app-loader" attribute: A text file that lists the several JS files
+		var appLoader = $("body").attr("sk-app-loader");
+		sk.loadList(appLoader);
+	};
 	/**
 	 * Random identifier generator.
 	 * @return	string	The identifier.
@@ -31,7 +88,7 @@ sk._core = new function() {
 			} else if (classObj.templateUrl != undefined) {
 				classObj.template = {url: classObj.templateUrl};
 				classObj.templateUrl = undefined;
-			} else {
+			} else if (classObj.template == undefined) {
 				classObj.template = {id: tag};
 			}
 			// definition of basic properties
