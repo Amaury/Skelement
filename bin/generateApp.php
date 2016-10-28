@@ -36,7 +36,7 @@ function processApplication() {
 	$result= "\"use strict\";\n";
 	// process files
 	foreach ($list as $path) {
-		if (empty($path))
+		if (empty($path) || $path[0] == '#')
 			continue;
 		if (!file_exists("$prefix/$path")) {
 			// file doesn't exist
