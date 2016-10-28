@@ -52,16 +52,14 @@ Bootstrapping the framework
 	<!-- Basic Javascript libraries (polyfill, jQuery, jSmart) and Skelement framework -->
 	<script type="text/javascript" src="/js/skelement-loader.js"></script>
 </head>
-<body sk-app-loader="/loader.js" sk-l10n-fr="/l10n/fr.json" sk-l10n="/l10n/en.json">
+<body sk-app-loader="/loader.js">
 	<sk-title value="Test app"></sk-title>
 </body>
 </html>
 ```
 
 - The `sk-app-loader` attribute of the `<body>` element contains the URL to the application loader (see below).
-- Here the `sk-l10n-fr` attribute defines the localisation file for french language.
-- Here the `sk-l10n` attribute defines the localisation file for any other language.
-- Here the whole application is defined by the `<sk-application>` element.
+- Here there is only one element `<sk-title>`.
 
 
 The application loader
@@ -90,8 +88,8 @@ var Title = {
 Title.prototype = {
 	created: function(params, response) {
 		response({
-			level: (params.level != undefined) ? params.level : 1,
-			value: (params.value != undefined && params.value.length) ? params.value : "Default Title"
+			level: params.level ? params.level : 1,
+			value: params.value ? params.value : "Default Title"
 		});
 	}
 };
@@ -105,7 +103,7 @@ The result will be:
 <head>
 	...
 </head>
-<body sk-app-loader="/loader.js" sk-l10n-fr="/l10n/fr.json" sk-l10n="/l10n/en.json">
+<body sk-app-loader="/loader.js">
 	<sk-title value="Test app">
 		<h1>Test app</h1>
 	</sk-title>
@@ -117,22 +115,31 @@ The result will be:
 How to write a more complex object
 ----------------------------------
 
+A webcomponent object is written in two steps. The first one contains data about the HTML tag and the template. The second one is the object's prototype, with methods called when the component is created, when the component's attributes are modified, and/or some private methods.
+
+Webcomponent objects inherit one method, called `render()`. If this method is called without any parameter, the `created()` method is called, as if the component was just created. If the `render()` method is called with a parameter, it is used as template data.
+
 ```javascript
+// object
 var App = {
 	// name of the custom tag of this component
 	tag: "app",
-	// associated template
-	// - if not set, will used a template defined inside the HTML file, with an attribute id="tpl-app"
-	// - it could be a string that contains the template itself
-	// - it could be an object with the key "id" (for a template in HTML) or the key "url"
-	//   (to fetch the template from an external file)
-	template: {url: "/app.tpl"}
+	/* associated template − one of the three following keys */
+	// direct template
+	template: "Content of the template",
+	// identifier of the <script> node that contains the template
+	templateId: "identifier-of-the-node",
+	// URL of the remote template file
+	templateUrl: "url"
 };
+// object's prototype
 App.prototype = {
 	/**
 	 * Method called when the component is created.
+	 * Some code could be executed, and in the end the response callback must be called
+	 * with template data given as parameter.
 	 * @param	object		params		Attributes of the HTML element.
-	 * @param	function	response	Handler to call to set data.
+	 * @param	function	response	Handler function to call to set template data.
 	 */
 	created: function(params, response) {
 		if (params.listType == "kids")
@@ -183,4 +190,64 @@ You can also use templates inside HTML:
 <script id="tpl-app" type="text/x-tpl-smarty">
 	{* content of the template *}
 </script>
+```
+
+
+Localisation
+------------
+
+An application could be localised, that is, translated, easily. First of all, you have to prepare some translation files in JSON format; one file per supported language.
+
+Example of english translation:
+```json
+{
+    "title": "My Application",
+    "your name": "Your name"
+    "your password": "Your password"
+}
+```
+
+Example of french translation:
+```json
+{
+    "title": "Mon application",
+    "your name": "Votre nom",
+    "your password": "Votre mot de passe"
+}
+```
+
+Then you have to declare these files in the HTML bootstrap. The right translation will be loaded, depending of the locale setting of the user's navigator.
+```html
+<html>
+<head>
+	...
+</head>
+<body sk-app-loader="/loader.js" sk-l10n-fr="/l10n/fr.json" sk-l10n="/l10n/en.json">
+	<sk-title value="Test app"></sk-title>
+</body>
+</html>
+```
+
+- The `sk-l10n-fr` attribute is used to set the path to the french translation file.
+- The `sk-l10n` set the path to the default translation file.
+
+Then, you can use the translations in your templates, thanks to the `{l10n}` plugin:
+```smarty
+<h1>{l10n}title{/l10n}</h1>
+<label>{l10n}your name{/l10n}</label>
+<label>{l10n}your password{/l10n}</label>
+```
+
+The result of this example will be, in english:
+```html
+<h1>My Application</h1>
+<label>Your name</label>
+<label>Your password</label>
+```
+
+And in french:
+```html
+<h1>Mon application</h1>
+<label>Votre nom</label>
+<label>Votre mot de passe</label>
 ```
