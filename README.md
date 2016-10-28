@@ -53,7 +53,7 @@ Bootstrapping the framework
 	<script type="text/javascript" src="/js/skelement-loader.js"></script>
 </head>
 <body sk-app-loader="/loader.js">
-	<sk-title value="Test app"></sk-title>
+	<sk-title value="Test app" level="3"></sk-title>
 </body>
 </html>
 ```
@@ -105,7 +105,7 @@ The result will be:
 </head>
 <body sk-app-loader="/loader.js">
 	<sk-title value="Test app">
-		<h1>Test app</h1>
+		<h3>Test app</h3>
 	</sk-title>
 </body>
 </html>
@@ -202,7 +202,7 @@ Example of english translation:
 ```json
 {
     "title": "My Application",
-    "your name": "Your name"
+    "your name": "Your name",
     "your password": "Your password"
 }
 ```
