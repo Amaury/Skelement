@@ -12,12 +12,18 @@
 
 	<!-- INLINE TEMPLATE -->
 	<script id="tpl-application" type="text/x-tpl-smarty">
-		<sk-title></sk-title>
-		<sk-user-list id="mainlist" userlist="fake"></sk-user-list>
-		<sk-netstatus sk-network-connected></sk-netstatus>
+		{if $sk.url.parts|count == 3 && $sk.url.parts[0] == "user"}
+			{* one single user is called *}
+			<sk-user-card name="{$sk.url.parts[1]}" age="{$sk.url.parts[2]}"></sk-user-card>
+		{else}
+			{* the list of users is called *}
+			<sk-title></sk-title>
+			<sk-user-list id="mainlist" userlist="fake"></sk-user-list>
+			<sk-netstatus sk-network-connected></sk-netstatus>
+		{/if}
 	</script>
 </head>
 <body sk-app-loader="/loader.txt" sk-l10n="/l10n/en.json" sk-l10n-fr="/l10n/fr.json">
-	<sk-application></sk-application>
+	<sk-application id="application"></sk-application>
 </body>
 </html>

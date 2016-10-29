@@ -20,10 +20,14 @@ sk._core.ui = new function() {
 	this.render = function(tag, tpl, data, handler) {
 		if (!this._pluginsLoaded) {
 			this._pluginsLoaded = true;
+			// Set global HTML escaping
+			jSmart.prototype.escape_html = true;
 			// add l10n plugin to jSmart
 			jSmart.prototype.registerPlugin("block", "l10n", function(params, content, data, repeat) {
 				if (repeat.value === false) {
-					return (sk._core.ui.l10n[content]);
+					if (sk._core.ui.l10n[content] != undefined)
+						return (sk._core.ui.l10n[content]);
+					return (content);
 				}
 			});
 		}
@@ -47,7 +51,14 @@ sk._core.ui = new function() {
 			this._templates[tag] = new jSmart(tpl);
 		}
 		// generating the template's data
-		var tplData = $.extend({l10n: this.l10n}, data);
+		var tplData = $.extend({
+			sk: {
+				url: {
+					path: sk.url.getPath(),
+					parts: sk.url.getParts()
+				}
+			}
+		}, data);
 		// template rendering
 		var html = this._templates[tag].fetch(tplData);
 		// call the given handler with the generated HTML

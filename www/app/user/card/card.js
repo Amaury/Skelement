@@ -20,6 +20,13 @@ app.user.Card.prototype = {
 		// send back the data to the response handler
 		response(params);
 	},
+	/** Method called to display only one user. */
+	showUser: function() {
+		var username = $(this).attr("name");
+		var userage = $(this).attr("age");
+		sk.url.set("/user/" + username + "/" + userage);
+		sk.refresh();
+	},
 	/**
 	 * Private method. Modify the given string.
 	 * @param	string	s	The input string.

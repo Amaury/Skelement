@@ -18,6 +18,7 @@ __loadFile("/js/jquery.min.js");
 __loadFile("/js/smart.min.js");
 // Skelement
 __loadFile("/js/skelement/sk.js");
+__loadFile("/js/skelement/sk.url.js");
 __loadFile("/js/skelement/sk._core.js");
 __loadFile("/js/skelement/sk._core.network.js");
 __loadFile("/js/skelement/sk._core.ui.js");

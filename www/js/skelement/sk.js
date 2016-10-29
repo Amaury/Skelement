@@ -44,6 +44,10 @@ var sk = new function() {
 			this._core.createComponent(component[i]);
 		}
 	};
+	/** Refresh the current page. */
+	this.refresh  = function() {
+		document.location.href = this.url._url;
+	};
 
 	/* *** Init. *** */
 	window.addEventListener("DOMContentLoaded", function() {
