@@ -137,6 +137,8 @@ sk._core = new function() {
 						// and a callback function that should be called as a result
 						var node = this;
 						classObj.prototype.created(attrs, function(response) {
+							if (response == undefined)
+								response = attrs;
 							node.render(response);
 						});
 						return;

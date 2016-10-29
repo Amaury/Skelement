@@ -68,6 +68,7 @@ function processFramework() {
 		'jquery.min.js',
 		'smart.min.js',
 		'skelement/sk.js',
+		'skelement/sk.url.js',
 		'skelement/sk._core.js',
 		'skelement/sk._core.network.js',
 		'skelement/sk._core.ui.js'
