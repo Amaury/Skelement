@@ -6,7 +6,7 @@ app.user.Card = {
 	/** HTML tag of this component. */
 	tag: "user-card",
 	/** The associated template. */
-	templateUrl: "/app/user/card/card.tpl"
+	templateUrl: "app/user/card/card.tpl"
 };
 app.user.Card.prototype = {
 	/**

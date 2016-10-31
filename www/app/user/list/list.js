@@ -6,7 +6,7 @@ app.user.List = {
 	/** HTML tag of this component. */
 	tag: "user-list",
 	/** URL of the template. */
-	templateUrl: "/app/user/list/list.tpl"
+	templateUrl: "app/user/list/list.tpl"
 };
 app.user.List.prototype = {
 	/**
@@ -31,7 +31,7 @@ app.user.List.prototype = {
 			return;
 		}
 		// if it's any other list, we send a request to the server (here a static JSON file is fetched)
-		$.getJSON("/users.json", function(data) {
+		$.getJSON("users.json", function(data) {
 			data.userlist = params.userlist;
 			response(data);
 		});
