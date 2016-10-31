@@ -3,18 +3,32 @@
  * Main Skelement object.
  */
 var sk = new function() {
+	/** Set if the application is executed inside Cordova. */
+	this.cordovaApp = !!window.cordova;
+	/** True if the "deviceready" event was triggered. */
+	this._isDeviceReady = false;
+	/** True if the "DOMContentLoaded" event was triggered. */
+	this._isDomLoaded = false;
+
 	/**
-	 * Loading of external JS files.
-	 * @param	string|array	url	URL or list of URLs.
+	 * Load one external JS file.
+	 * @param	string		url		URL that must be loaded.
+	 * @param	function	callback	Function to call after loading.
 	 */
-	this.load = function(url) {
-		if ($.isArray(url)) {
-			for (var i in url) {
-				this.load(url[i]);
-			}
-			return
-		}
-		$.getScript(url);
+	this.loadScript = function(url, callback) {
+		$.getScript(url, callback);
+	};
+	/**
+	 * Loading of a list of JS files.
+	 * @param	array	urls	List of URLs.
+	 */
+	this.loadScripts = function(urls) {
+		if (!$.isArray(urls) || !urls.length)
+			return;
+		var url = urls.shift();
+		this.loadScript(url, function() {
+			sk.loadScripts(urls);
+		});
 	};
 	/**
 	 * Load a list of external JS files from a text file.
@@ -23,12 +37,13 @@ var sk = new function() {
 	this.loadList = function(url) {
 		$.get(url, function(txt) {
 			var lines = txt.split("\n");
+			var urls = [];
 			for (var i = 0, len = lines.length; i < len; i++) {
 				var url = $.trim(lines[i]);
-				if (url.length && url.charAt(0) != "#") {
-					sk.load(url);
-				}
+				if (url.length && url.charAt(0) != "#")
+					urls.push(url);
 			}
+			sk.loadScripts(urls);
 		}, "text");
 	};
 	/**
@@ -50,7 +65,16 @@ var sk = new function() {
 	};
 
 	/* *** Init. *** */
+	document.addEventListener("deviceready", function() {
+		this._isDeviceReady = true;
+		if (this.cordovaApp && this._isDomLoaded) {
+			sk._core.init();
+		}
+	}, false);
 	window.addEventListener("DOMContentLoaded", function() {
-		sk._core.init();
+		this._isDomLoaded = true;
+		if (!this.cordovaApp || this._isDeviceReady) {
+			sk._core.init();
+		}
 	}, false);
 };

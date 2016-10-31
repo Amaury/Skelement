@@ -27,7 +27,7 @@ sk._core = new function() {
 		// check for global l10n
 		l10n = $("body").attr("sk-l10n");
 		if (l10n != undefined) {
-			this.loadL10n(L10n, function() {
+			this.loadL10n(l10n, function() {
 				sk._core.loadApplication();
 			});
 			return;
@@ -51,7 +51,7 @@ sk._core = new function() {
 		// search for "sk-app-file" attribute: One JS file that contains the whole application
 		var appFile = $("body").attr("sk-app-file");
 		if (appFile != undefined && appFile.length) {
-			sk.load(appFile);
+			sk.loadScript(appFile);
 			return;
 		}
 		// search for "sk-app-loader" attribute: A text file that lists the several JS files
