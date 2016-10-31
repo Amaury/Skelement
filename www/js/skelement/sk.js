@@ -65,15 +65,17 @@ var sk = new function() {
 	};
 
 	/* *** Init. *** */
-	document.addEventListener("deviceready", function() {
-		this._isDeviceReady = true;
-		if (this.cordovaApp && this._isDomLoaded) {
-			sk._core.init();
-		}
-	}, false);
+	// initialize the framework when the DOM content is loaded,
+	// and when the device is ready (if running inside Phonegap/Cordova)
 	window.addEventListener("DOMContentLoaded", function() {
 		this._isDomLoaded = true;
 		if (!this.cordovaApp || this._isDeviceReady) {
+			sk._core.init();
+		}
+	}, false);
+	document.addEventListener("deviceready", function() {
+		this._isDeviceReady = true;
+		if (this.cordovaApp && this._isDomLoaded) {
 			sk._core.init();
 		}
 	}, false);
