@@ -193,6 +193,34 @@ You can also use templates inside HTML:
 ```
 
 
+Post-template rendering callbacks
+---------------------------------
+
+Sometimes, you'll need to execute some code after a template is processed and injected in the page.
+
+You can define a callback that will be executed each time a template is processed:
+```javascript
+sk.setPostRenderingCallback(function() {
+    // here the code
+});
+```
+
+Or you can define it for one element:
+```javascript
+var App = {
+    tag: "app"
+};
+App.prototype = {
+    created: function(params, response) {
+        var data = {/*some data*/};
+        response(data, function() {
+            // here the code
+        });
+    }
+};
+```
+
+
 Localisation
 ------------
 
