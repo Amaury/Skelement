@@ -1,6 +1,9 @@
 "use strict";
 /** Core namespace. Must not be used from outside of the framework. */
 sk._core = new function() {
+	/** Callback that must be called each time a template is rendered and injected in DOM. */
+	this.postRenderingCallback = null;
+
 	/** Framework initialisation. */
 	this.init = function() {
 		// check for l10n
@@ -112,7 +115,7 @@ sk._core = new function() {
 				proto.attributeChangedCallback = classObj.prototype.changed;
 			}
 			// -- rendering method
-			proto.render = function(data) {
+			proto.render = function(data, callback) {
 				// check if some data are provided
 				if (data == undefined) {
 					// get the attributes of the HTML node and create an associative array that will
@@ -136,10 +139,10 @@ sk._core = new function() {
 						// call the creation callback, giving 2 parameters: the HTML node attributes,
 						// and a callback function that should be called as a result
 						var node = this;
-						classObj.prototype.created(attrs, function(response) {
+						classObj.prototype.created(attrs, function(response, cb) {
 							if (response == undefined)
 								response = attrs;
-							node.render(response);
+							node.render(response, cb);
 						});
 						return;
 					}
@@ -152,6 +155,10 @@ sk._core = new function() {
 				var node = this;
 				sk._core.ui.render(this.tag, this.manager.template, data, function(html) {
 					node.innerHTML = html;
+					if (sk._core.postRenderingCallback != undefined)
+						sk._core.postRenderingCallback();
+					if (callback != undefined)
+						callback();
 				});
 			};
 			// -- all other methods of the management object are added to the component's prototype

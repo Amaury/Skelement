@@ -63,6 +63,13 @@ var sk = new function() {
 	this.refresh  = function() {
 		document.location.href = this.url._url;
 	};
+	/**
+	 * Define a callback that would be executed each time a template is rendered and injected in DOM.
+	 * @param	function	callback	The callback to execute.
+	 */
+	this.setPostRenderingCallback = function(callback) {
+		sk._core.postRenderingCallback = callback;
+	};
 
 	/* *** Init. *** */
 	// initialize the framework when the DOM content is loaded,
