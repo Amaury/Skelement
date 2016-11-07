@@ -4,16 +4,12 @@ Skelement
 Simple Javascript framework.
 
 
-How to test
------------
+Rationale
+---------
 
-You'll need PHP-CLI.
+Skelement is a front-end Javascript framework, which goal is to facilitate the development of one-page Web interfaces or mobile interfaces (using [Phonegap](http://phonegap.com)/[Cordova](https://cordova.apache.org/)).
 
-```shell
-$ make server
-```
-
-Then open your navigator on `http://localhost:8000`.
+With Skelement, an application is created using custom components. Each component is composed by a Javascript object and a template (using [Smarty](http://smarty.net) syntax). Objects communicates together by calling their methods and/or modifying the HTML nodes' attributes to trigger a response from the components.
 
 
 Source tree
@@ -52,7 +48,7 @@ Bootstrapping the framework
 	<!-- Basic Javascript libraries (polyfill, jQuery, jSmart) and Skelement framework -->
 	<script type="text/javascript" src="/js/skelement-loader.js"></script>
 </head>
-<body sk-app-loader="/loader.js">
+<body sk-app-loader="loader.txt">
 	<sk-title value="Test app" level="3"></sk-title>
 </body>
 </html>
@@ -69,7 +65,7 @@ This file contains just a list of instructions that will be used to load the Jav
 
 ```
 # comment lines start with '#'
-/app/title.js
+app/title.js
 ```
 
 
@@ -191,6 +187,18 @@ You can also use templates inside HTML:
 	{* content of the template *}
 </script>
 ```
+
+
+How to test
+-----------
+
+A Skelement application must be loaded through a webserver. If you don't have one, you can start the one provided (you'll need PHP-CLI).
+
+```shell
+$ make server
+```
+
+Then open your navigator on `http://localhost:8000`.
 
 
 Post-template rendering callbacks
