@@ -99,7 +99,8 @@ function processFramework() {
 /* Generate application loader. */
 function processLoader() {
 	$prefix = __DIR__ . '/../www';
-	_processLoaderDir($prefix, $prefix);
+	file_put_contents("$prefix/loader.txt", '');
+	_processLoaderDir("$prefix/app", "$prefix/");
 }
 function _processLoaderDir($path, $prefix) {
 	$files = scandir($path);
@@ -110,7 +111,7 @@ function _processLoaderDir($path, $prefix) {
 		if (is_file($fullpath) && substr($file, -3) == '.js') {
 			if (substr($fullpath, 0, strlen($prefix)) == $prefix)
 				$fullpath = substr($fullpath, strlen($prefix));
-			file_put_contents(__DIR__ . '/../www/loader.txt', "$fullpath\n");
+			file_put_contents(__DIR__ . '/../www/loader.txt', "$fullpath\n", FILE_APPEND);
 		} else if (is_dir($fullpath)) {
 			_processLoaderDir($fullpath, $prefix);
 		}
