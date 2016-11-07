@@ -1,7 +1,8 @@
 #!/usr/bin/php
 <?php
 
-if ($_SERVER['argc'] != 2) {
+if ($_SERVER['argc'] != 2 || in_array($_SERVER['argv'][1], array('help', '-h', '--help'))) {
+	processHelp();
 	exit(1);
 }
 $params = $_SERVER['argv'];
@@ -11,6 +12,8 @@ foreach ($params as $param) {
 		processFramework();
 	if ($param == 'application')
 		processApplication();
+	if ($param == 'loader')
+		processLoader();
 }
 
 /** Concatenate and minify application's files. */
@@ -92,6 +95,72 @@ function processFramework() {
 		exit(7);
 	}
 }
+
+/* Generate application loader. */
+function processLoader() {
+	$prefix = __DIR__ . '/../www';
+	_processLoaderDir($prefix, $prefix);
+}
+function _processLoaderDir($path, $prefix) {
+	$files = scandir($path);
+	foreach ($files as $file) {
+		if ($file[0] == '.')
+			continue;
+		$fullpath = "$path/$file";
+		if (is_file($fullpath) && substr($file, -3) == '.js') {
+			if (substr($fullpath, 0, strlen($prefix)) == $prefix)
+				$fullpath = substr($fullpath, strlen($prefix));
+			file_put_contents(__DIR__ . '/../www/loader.txt', "$fullpath\n");
+		} else if (is_dir($fullpath)) {
+			_processLoaderDir($fullpath, $prefix);
+		}
+	}
+}
+
+/** Show help message. */
+function processHelp() {
+	print(Ansi::bold($_SERVER['argv'][0]) . " [help | framework | application | loader]\n\n" .
+	      "\t" . Ansi::faint("framework") . "\tConcatenate and minify framework's files.\n" .
+	      "\t" . Ansi::faint("application") . "\tConcatenate and minify application's files.\n" .
+	      "\t" . Ansi::faint("loader") . "\t\tGenerate application's loader.\n");
+}
+
+/* ----------------------------------------------------------------- */
+
+class Ansi {
+	static public $colors = array(
+		'black'		=> 0,
+		'red'		=> 1,
+		'green'		=> 2,
+		'yellow'	=> 3,
+		'blue'		=> 4,
+		'magenta'	=> 5,
+		'cyan'		=> 6,
+		'white'		=> 7
+	);
+
+	static public function bold($text) {
+		return (chr(27) . "[1m" . $text . chr(27) . "[0m");
+	}
+	static public function faint($text) {
+		return (chr(27) . "[2m" . $text . chr(27) . "[0m");
+	}
+	static public function underline($text) {
+		return (chr(27) . "[4m" . $text . chr(27) . "[0m");
+	}
+	static public function negative($text) {
+		return (chr(27) . "[7m" . $text . chr(27) . "[0m");
+	}
+	static public function color($color, $text) {
+		return (chr(27) . "[9" . self::$colors[$color] . "m" . $text . chr(27) . "[0m");
+	}
+	static public function backColor($backColor, $color, $text) {
+		return (chr(27) . "[4" . self::$colors[$backColor] . "m" . chr(27) . "[9" .
+		        self::$colors[$color] . "m" . $text . chr(27) . "[0m");
+	}
+}
+
+/* ----------------------------------------------------------------- */
 
 /**
 * jsmin.php - PHP implementation of Douglas Crockford's JSMin.
