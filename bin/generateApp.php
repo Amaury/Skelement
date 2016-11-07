@@ -1,39 +1,31 @@
 #!/usr/bin/php
 <?php
 
-if ($_SERVER['argc'] != 2 || in_array($_SERVER['argv'][1], array('help', '-h', '--help'))) {
+$options = getopt('hlaf', array('help', 'loader', 'application', 'framework'));
+if (isset($options['h']) || isset($options['help']))
 	processHelp();
-	exit(1);
-}
-$params = $_SERVER['argv'];
-array_shift($params);
-foreach ($params as $param) {
-	if ($param == 'framework')
-		processFramework();
-	if ($param == 'application')
-		processApplication();
-	if ($param == 'loader')
-		processLoader();
-}
+if (isset($options['l']) || isset($options['loader']))
+	processLoader();
+if (isset($options['a']) || isset($options['application']))
+	processApplication();
+if (isset($options['f']) || isset($options['framework']))
+	processFramework();
 
 /** Concatenate and minify application's files. */
 function processApplication() {
 	$prefix = __DIR__ . '/../www';
-	// read HTML file
-	$htmlPath = "$prefix/index.html";
-	$html = file_get_contents($htmlPath);
-	// extract application loader
-	preg_match('/sk-app-loader="([^"]*)"/', $html, $matches);
-	if (!isset($matches[1]) || empty($matches[1])) {
-		// no application loader
-		return;
+	// check loader file
+	$loaderPath = "$prefix/_app.txt";
+	if (!file_exists($loaderPath)) {
+		// loader file doesn't exist, generate it
+		processLoader();
+		if (!file_exists($loaderPath)) {
+			// loader file still doesn't exist
+			fwrite(STDERR, Ansi::color('red', "Unable to find application loader file.\n"));
+			exit(2);
+		}
 	}
 	// read loader file
-	$loaderPath = "$prefix/" . $matches[1];
-	if (!file_exists($loaderPath)) {
-		// loader file doesn't exist
-		exit(2);
-	}
 	$loader = file_get_contents($loaderPath);
 	$list = explode("\n", $loader);
 	$result= "\"use strict\";\n";
@@ -41,8 +33,9 @@ function processApplication() {
 	foreach ($list as $path) {
 		if (empty($path) || $path[0] == '#')
 			continue;
-		if (!file_exists("$prefix/$path")) {
+		if (!is_readable("$prefix/$path")) {
 			// file doesn't exist
+			fwrite(STDERR, Ansi::color('red', "Unable to find file '") . Ansi::faint($path) . Ansi::color('red', "'.\n"));
 			exit(3);
 		}
 		$content = file_get_contents("$prefix/$path");
@@ -53,13 +46,8 @@ function processApplication() {
 	// write application file
 	if (file_put_contents("$prefix/_app.js", $result) === false) {
 		// unable to write application file
+		fwrite(STDERR, Ansi::color('red', "Unable to write file '") . Ansi::faint('_app.js') . Ansi::color('red', "'.\n"));
 		exit(4);
-	}
-	// update HTML file
-	$html = str_replace('sk-app-loader="' . $matches[1] . '"', 'sk-app-file="_app.js"', $html);
-	if (file_put_contents($htmlPath, $html) === false) {
-		// unable to update HTML file
-		exit(5);
 	}
 }
 
@@ -82,6 +70,7 @@ function processFramework() {
 			continue;
 		if (($content = file_get_contents("$prefix/$file")) === false) {
 			// unable to read file
+			fwrite(STDERR, Ansi::color('red', "Unable to read file '") . Ansi::faint("js/$file") . Ansi::color('red', "'.\n"));
 			exit(6);
 		}
 		$content = str_replace('"use strict";', '', $content);
@@ -92,6 +81,7 @@ function processFramework() {
 	}
 	if (file_put_contents("$prefix/skelement-loader.js", $result) === false) {
 		// unable to update loader file
+		fwrite(STDERR, Ansi::color('red', "Unable to write file '") . Ansi::faint('skelement-loader.js') . Ansi::color('red', "'.\n"));
 		exit(7);
 	}
 }
@@ -99,7 +89,7 @@ function processFramework() {
 /* Generate application loader. */
 function processLoader() {
 	$prefix = __DIR__ . '/../www';
-	file_put_contents("$prefix/loader.txt", '');
+	file_put_contents("$prefix/_app.txt", '');
 	_processLoaderDir("$prefix/app", "$prefix/");
 }
 function _processLoaderDir($path, $prefix) {
@@ -111,7 +101,7 @@ function _processLoaderDir($path, $prefix) {
 		if (is_file($fullpath) && substr($file, -3) == '.js') {
 			if (substr($fullpath, 0, strlen($prefix)) == $prefix)
 				$fullpath = substr($fullpath, strlen($prefix));
-			file_put_contents(__DIR__ . '/../www/loader.txt', "$fullpath\n", FILE_APPEND);
+			file_put_contents(__DIR__ . '/../www/_app.txt', "$fullpath\n", FILE_APPEND);
 		} else if (is_dir($fullpath)) {
 			_processLoaderDir($fullpath, $prefix);
 		}
@@ -120,10 +110,11 @@ function _processLoaderDir($path, $prefix) {
 
 /** Show help message. */
 function processHelp() {
-	print(Ansi::bold($_SERVER['argv'][0]) . " [help | framework | application | loader]\n\n" .
-	      "\t" . Ansi::faint("framework") . "\tConcatenate and minify framework's files.\n" .
-	      "\t" . Ansi::faint("application") . "\tConcatenate and minify application's files.\n" .
-	      "\t" . Ansi::faint("loader") . "\t\tGenerate application's loader.\n");
+	print(Ansi::bold("SYNOPSIS\n\t" . $_SERVER['argv'][0]) . " [-h | --help] [-f | --framework] [-a | --application] [-l | loader]\n\n" .
+	      Ansi::bold("OPTIONS\n") .
+	      "\t" . Ansi::faint("-f, --framework") . "\n\t\tConcatenate and minify framework's files.\n\n" .
+	      "\t" . Ansi::faint("-a, --application") . "\n\t\tConcatenate and minify application's files.\n\n" .
+	      "\t" . Ansi::faint("-l, --loader") . "\n\t\tGenerate application's loader.\n");
 }
 
 /* ----------------------------------------------------------------- */

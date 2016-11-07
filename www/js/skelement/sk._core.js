@@ -51,15 +51,14 @@ sk._core = new function() {
 	};
 	/** Load application files. */
 	this.loadApplication = function() {
-		// search for "sk-app-file" attribute: One JS file that contains the whole application
-		var appFile = $("body").attr("sk-app-file");
-		if (appFile != undefined && appFile.length) {
-			sk.loadScript(appFile);
-			return;
-		}
-		// search for "sk-app-loader" attribute: A text file that lists the several JS files
-		var appLoader = $("body").attr("sk-app-loader");
-		sk.loadList(appLoader);
+		// try to load the file that contains the whole application
+		sk.loadScript("_app.js", undefined, function() {
+			// the file doesn't exist, try to load the loader file
+			sk.loadList("_app.txt", undefined, function() {
+				// unable to find this file either, write an error
+				console.error("[Skelement] Error: Unable to load the application.");
+			});
+		});
 	};
 	/**
 	 * Random identifier generator.

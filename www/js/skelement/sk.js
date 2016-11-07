@@ -14,9 +14,13 @@ var sk = new function() {
 	 * Load one external JS file.
 	 * @param	string		url		URL that must be loaded.
 	 * @param	function	callback	Function to call after loading.
+	 * @param	function	errcb		Function to call is there was an error.
 	 */
-	this.loadScript = function(url, callback) {
-		$.getScript(url, callback);
+	this.loadScript = function(url, callback, errcb) {
+		$.getScript(url, callback).fail(function() {
+			if (errcb != undefined)
+				errcb();
+		});
 	};
 	/**
 	 * Loading of a list of JS files.

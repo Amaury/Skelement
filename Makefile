@@ -3,18 +3,24 @@ PORT	= 8000
 .PHONY: help server app
 
 help:
+	@echo " make loader       Generate application's loader file."
+	@echo " make application  Generate application's minified file."
 	@echo " make server       Launch test server."
-	@echo " make skelement    Generate framework's minified file."
-	@echo " make app          Generate application's minified file."
+	@echo " make framework    Generate framework's minified file."
 
 server:
 	@echo "Starting local webserver"
 	cd www; php -S localhost:${PORT}
 
-skelement:
+framework:
 	@echo "Generation of framework's minified file"
-	bin/generateApp.php framework
+	bin/generateApp.php --framework
 
-app:
+application:
 	@echo "Generation of application's minified file"
-	bin/generateApp.php application
+	bin/generateApp.php --application
+
+loader:
+	@echo "Generation of application's loader file"
+	bin/generateApp.php --loader
+

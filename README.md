@@ -23,11 +23,11 @@ Here is the source tree of the example application:
 ├── Makefile                            Commands execution tool
 ├── README.md                           This documentation
 └── www/
+    ├── _app.txt                        Application loader
     ├── app/                            Application's folder
     ├── index.html                      Bootstrap HTML file
     ├── js/                             Javascript Libraries
     ├── l10n/                           Localisation folder
-    ├── loader.txt                      Application loader
     └── style.css                       CSS styles
 ```
 
@@ -48,14 +48,13 @@ Bootstrapping the framework
 	<!-- Basic Javascript libraries (polyfill, jQuery, jSmart) and Skelement framework -->
 	<script type="text/javascript" src="/js/skelement-loader.js"></script>
 </head>
-<body sk-app-loader="loader.txt">
+<body>
 	<sk-title value="Test app" level="3"></sk-title>
 </body>
 </html>
 ```
 
-- The `sk-app-loader` attribute of the `<body>` element contains the URL to the application loader (see below).
-- Here there is only one element `<sk-title>`.
+Here there is only one element `<sk-title>`.
 
 
 The application loader
@@ -66,6 +65,11 @@ This file contains just a list of instructions that will be used to load the Jav
 ```
 # comment lines start with '#'
 app/title.js
+```
+
+You can generate this file by the command:
+```shell
+$ make loader
 ```
 
 
