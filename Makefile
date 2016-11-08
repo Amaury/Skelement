@@ -1,6 +1,6 @@
 PORT	= 8000
 
-.PHONY: help server app
+.PHONY: help server framework application loader
 
 help:
 	@echo " make loader       Generate application's loader file."
