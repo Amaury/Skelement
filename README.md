@@ -7,9 +7,18 @@ Simple Javascript framework.
 Rationale
 ---------
 
-Skelement is a front-end Javascript framework, which goal is to facilitate the development of one-page Web interfaces or mobile interfaces (using [Phonegap](http://phonegap.com)/[Cordova](https://cordova.apache.org/)).
+Skelement is a front-end Javascript framework, targetting
+- one-page Web interfaces
+- mobile interfaces (using [Phonegap](http://phonegap.com)/[Cordova](https://cordova.apache.org/))
 
-With Skelement, an application is created using custom components. Each component is composed by a Javascript object and a template (using [Smarty](http://smarty.net) syntax). Objects communicates together by calling their methods and/or modifying the HTML nodes' attributes to trigger a response from the components.
+Compared to other JS frameworks, Skelement is simpler to use (no configuration, convention over configuration).
+
+With Skelement, an application is created using [custom components](http://webcomponents.org/articles/introduction-to-custom-elements/).
+Each component is composed by:
+- a Javascript object
+- a template (using [Smarty](http://smarty.net) syntax).
+
+Objects communicates together by calling their methods and/or modifying the HTML nodes' attributes to trigger a response from the components.
 
 
 Source tree
@@ -203,6 +212,14 @@ $ make server
 ```
 
 Then open your navigator on `http://localhost:8000`.
+
+
+Special attributes
+------------------
+
+The custom tags may have some special attributes which are automatically updated when needed.
+
+*sk-network-connected*: Contains the string "`true`" or "`false`" depending of the network's status.
 
 
 Post-template rendering callbacks
