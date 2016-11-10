@@ -58,12 +58,11 @@ Bootstrapping the framework
 	<script type="text/javascript" src="/js/skelement-loader.js"></script>
 </head>
 <body>
-	<sk-title value="Test app" level="3"></sk-title>
+	<!-- Here there is only one element -->
+	<sk-title></sk-title>
 </body>
 </html>
 ```
-
-Here there is only one element `<sk-title>`.
 
 
 The application loader
@@ -72,16 +71,16 @@ The application loader
 This file contains the list of your application's JS files.
 
 ```
-# comment lines start with '#'
+# comment lines start with a sharp sign
 app/title.js
 ```
 
-You can generate this file by the command:
+You can create this file by yourself, or generate it with the command:
 ```shell
 $ make loader
 ```
 
-Run this command each time you create a new Javascript file. By convention, every files should be placed under the `app/` folder (or in a subfolder of `app/`).
+Run this command each time you create a new Javascript file. By convention, all JS application files should be placed under the `app/` folder (and/or subfolders of `app/`).
 
 
 How to write a basic object
@@ -90,6 +89,7 @@ How to write a basic object
 The simplest object contains its own template, and has just one method which is called when the component is created:
 
 ```javascript
+// the Title object will manage the <sk-title> tag
 var Title = {
 	// HTML tag of this component (without the "sk-" prefix)
 	tag: "title",
@@ -97,15 +97,19 @@ var Title = {
 	template: "<h3>{$value|escape}</h3>"
 };
 Title.prototype = {
+	// created()
 	// method called when a tag <sk-title> is found
-	// first parameter "params":    list of the tag attributes
-	// second parameter "response": callback function that must be called;
+	// - first parameter "params":    list of the tag attributes
+	// - second parameter "response": callback function that must be called;
 	//        if some data are given to this function as parameter, they'll
 	//        be passed to the template
 	created: function(params, response) {
+		// some data are created, to define the title's text
+		// (use the "value" attribute if defined, otherwise use a default text)
 		var data = {
 			value: params.value ? params.value : "Default Title"
 		};
+		// the rendering callback is called with the data given as parameter
 		response(data);
 	}
 };
@@ -134,7 +138,6 @@ The result will be:
 </body>
 </html>
 ```
-
 
 But if the HTML is:
 ```html
@@ -252,13 +255,30 @@ $ make server
 Then open your navigator on `http://localhost:8000`.
 
 
+Framework's methods callable from component objects
+---------------------------------------------------
+
+- `this.render()`: Ask for a full rendering of the content of the tag.
+- `this.render(data)`: The same, but giving some data to be used in place of the tag attributes list.
+- `sk.loadScript(url)`: Load an external JS file.
+- `sk.loadScripts(urls)`: Load a list of external JS files.
+- `sk.loadList(url)`: Load an external text file, which contains a list of JS files' URL.
+- `sk.refresh()`: Refresh the current page.
+- `sk.setPostRenderingCallback(callback)`: See below.
+- `sk.url.getPath()`: Return the current URL path.
+- `sk.url.getParts()`: Return the current URL path, chunked as a list of elements.
+- `sk.url.set(url)`: Define the current URL in the address bar.
+
+
 Special attributes
 ------------------
 
-The custom tags may have some special attributes which are automatically updated when needed.
+The custom tags may have some special attributes that will be automatically filled with some values.
 
 - `sk-network-connected`: Contains the string "`true`" or "`false`" depending of the network's status.
 - `sk-url-path`: Contains the current URL path.
+
+More, the framework will update the values if needed. If you defined a `changed()` method in your object, it will ba called each time one of these attributes is updated.
 
 
 Post-template rendering callbacks
@@ -318,7 +338,7 @@ Then you have to declare these files in the HTML bootstrap. The right translatio
 <head>
 	...
 </head>
-<body sk-app-loader="/loader.js" sk-lang-fr="/lang/fr.json" sk-lang="/lang/en.json">
+<body sk-lang-fr="/lang/fr.json" sk-lang="/lang/en.json">
 	<sk-title value="Test app"></sk-title>
 </body>
 </html>
@@ -347,3 +367,4 @@ And in french:
 <label>Votre nom</label>
 <label>Votre mot de passe</label>
 ```
+
