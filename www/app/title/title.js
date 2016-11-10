@@ -6,7 +6,7 @@ app.Title = {
 	/** HTML tag of this component. */
 	tag: "title",
 	/** Template used to display this component. */
-	template: "<h1>{$value|escape} ({l10n}title{/l10n})</h1>"
+	template: "<h1>{$value|escape} ({lang}title{/lang})</h1>"
 };
 app.Title.prototype = {
 	/**

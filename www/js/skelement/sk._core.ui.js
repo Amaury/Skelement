@@ -2,7 +2,7 @@
 /** UI namespace. */
 sk._core.ui = new function() {
 	/** Localisation constants. */
-	this.l10n = null;
+	this.lang = null;
 	/** Is the jSmart plugins are loaded? */
 	this._pluginsLoaded = false;
 	/** List of created template renderers. */
@@ -22,11 +22,11 @@ sk._core.ui = new function() {
 			this._pluginsLoaded = true;
 			// Set global HTML escaping
 			jSmart.prototype.escape_html = true;
-			// add l10n plugin to jSmart
-			jSmart.prototype.registerPlugin("block", "l10n", function(params, content, data, repeat) {
+			// add lang plugin to jSmart
+			jSmart.prototype.registerPlugin("block", "lang", function(params, content, data, repeat) {
 				if (repeat.value === false) {
-					if (sk._core.ui.l10n[content] != undefined)
-						return (sk._core.ui.l10n[content]);
+					if (sk._core.ui.lang[content] != undefined)
+						return (sk._core.ui.lang[content]);
 					return (content);
 				}
 			});

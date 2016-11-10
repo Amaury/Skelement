@@ -36,7 +36,7 @@ Here is the source tree of the example application:
     ├── app/                            Application's folder
     ├── index.html                      Bootstrap HTML file
     ├── js/                             Javascript Libraries
-    ├── l10n/                           Localisation folder
+    ├── lang/                           Localisation folder
     └── style.css                       CSS styles
 ```
 
@@ -219,7 +219,8 @@ Special attributes
 
 The custom tags may have some special attributes which are automatically updated when needed.
 
-*sk-network-connected*: Contains the string "`true`" or "`false`" depending of the network's status.
+- `sk-network-connected`: Contains the string "`true`" or "`false`" depending of the network's status.
+- `sk-url-path`: Contains the current URL path.
 
 
 Post-template rendering callbacks
@@ -279,20 +280,20 @@ Then you have to declare these files in the HTML bootstrap. The right translatio
 <head>
 	...
 </head>
-<body sk-app-loader="/loader.js" sk-l10n-fr="/l10n/fr.json" sk-l10n="/l10n/en.json">
+<body sk-app-loader="/loader.js" sk-lang-fr="/lang/fr.json" sk-lang="/lang/en.json">
 	<sk-title value="Test app"></sk-title>
 </body>
 </html>
 ```
 
-- The `sk-l10n-fr` attribute is used to set the path to the french translation file.
-- The `sk-l10n` set the path to the default translation file.
+- The `sk-lang-fr` attribute is used to set the path to the french translation file.
+- The `sk-lang` set the path to the default translation file.
 
-Then, you can use the translations in your templates, thanks to the `{l10n}` plugin:
+Then, you can use the translations in your templates, thanks to the `{lang}` plugin:
 ```smarty
-<h1>{l10n}title{/l10n}</h1>
-<label>{l10n}your name{/l10n}</label>
-<label>{l10n}your password{/l10n}</label>
+<h1>{lang}title{/lang}</h1>
+<label>{lang}your name{/lang}</label>
+<label>{lang}your password{/lang}</label>
 ```
 
 The result of this example will be, in english:
