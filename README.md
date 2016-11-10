@@ -69,7 +69,7 @@ Here there is only one element `<sk-title>`.
 The application loader
 ----------------------
 
-This file contains just a list of instructions that will be used to load the Javascript files of the application.
+This file contains the list of your application's JS files.
 
 ```
 # comment lines start with '#'
@@ -81,38 +81,76 @@ You can generate this file by the command:
 $ make loader
 ```
 
+Run this command each time you create a new Javascript file. By convention, every files should be placed under the `app/` folder (or in a subfolder of `app/`).
+
 
 How to write a basic object
 ---------------------------
 
-The simplest object contains its own template, and just one method which is called when the component is created:
+The simplest object contains its own template, and has just one method which is called when the component is created:
 
 ```javascript
 var Title = {
 	// HTML tag of this component (without the "sk-" prefix)
 	tag: "title",
 	// template associated to the component
-	template: "<h{$level}>{$value|escape}</h{$level}>"
+	template: "<h3>{$value|escape}</h3>"
 };
 Title.prototype = {
+	// method called when a tag <sk-title> is found
+	// first parameter "params":    list of the tag attributes
+	// second parameter "response": callback function that must be called;
+	//        if some data are given to this function as parameter, they'll
+	//        be passed to the template
 	created: function(params, response) {
-		response({
-			level: params.level ? params.level : 1,
+		var data = {
 			value: params.value ? params.value : "Default Title"
-		});
+		};
+		response(data);
 	}
 };
 // create the webcomponent for the tag "sk-title"
 sk.createComponent(Title);
 ```
 
+If the bootstrap HTML is:
+```html
+<html>
+<head>...</head>
+<body>
+	<sk-title></sk-title>
+</body>
+</html>
+```
+
 The result will be:
 ```html
 <html>
-<head>
-	...
-</head>
-<body sk-app-loader="/loader.js">
+<head>...</head>
+<body>
+	<sk-title>
+		<h3>Default title</h3>
+	</sk-title>
+</body>
+</html>
+```
+
+
+But if the HTML is:
+```html
+<html>
+<head>...</head>
+<body>
+	<sk-title value="Test app"></sk-title>
+</body>
+</html>
+```
+
+The result will be:
+```html
+<html>
+<head>...</head>
+<body>
 	<sk-title value="Test app">
 		<h3>Test app</h3>
 	</sk-title>
@@ -131,7 +169,7 @@ Webcomponent objects inherit one method, called `render()`. If this method is ca
 ```javascript
 // object
 var App = {
-	// name of the custom tag of this component
+	// name of the custom tag of this component (without the "sk-" prefix)
 	tag: "app",
 	/* associated template − one of the three following keys */
 	// direct template
@@ -194,7 +232,7 @@ Here is an example of template in a separate file:
 {/if}
 ```
 
-You can also use templates inside HTML:
+You can also write templates inside HTML:
 ```html
 <script id="tpl-app" type="text/x-tpl-smarty">
 	{* content of the template *}
